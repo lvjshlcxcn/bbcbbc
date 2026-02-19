@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>中美 AI 应用工具集</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --muted: #94a3b8;
+      --text: #e2e8f0;
+      --accent: #22d3ee;
+      --accent-2: #a78bfa;
+      --border: #1f2937;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, var(--bg) 55%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .container {
+      width: min(1120px, 92vw);
+      margin: 0 auto;
+      padding: 28px 0 36px;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 2.7vw, 2.4rem);
+      letter-spacing: .5px;
+    }
+    .sub {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .98rem;
+      line-height: 1.6;
+      max-width: 760px;
+    }
+    .toolbar {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .btn {
+      border: 1px solid var(--border);
+      color: var(--text);
+      background: rgba(15, 23, 42, .7);
+      padding: 9px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: .92rem;
+      transition: all .2s ease;
+    }
+    .btn.active,
+    .btn:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(34, 211, 238, .18);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .card {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(17,24,39,.92), rgba(2,6,23,.92));
+      border-radius: 14px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 192px;
+    }
+    .card h3 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+    .tag {
+      width: fit-content;
+      padding: 4px 9px;
+      font-size: .75rem;
+      border-radius: 999px;
+      color: #0f172a;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      font-weight: 600;
+    }
+    .desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+      line-height: 1.45;
+      flex-grow: 1;
+    }
+    .go {
+      display: inline-flex;
+      text-decoration: none;
+      width: fit-content;
+      color: #0b1220;
+      background: #e2e8f0;
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-weight: 600;
+      font-size: .85rem;
+    }
+    .go:hover { background: #cbd5e1; }
+    footer {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: .82rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>中美知名 AI 公司应用工具集</h1>
+    <p class="sub">一个轻量级 H5 单页面，收录美国与中国热门 AI 产品，覆盖通用大模型、办公助手、代码工具、图像与视频生成等方向。点击即可跳转到对应官网。</p>
+
+    <div class="toolbar" id="toolbar">
+      <button class="btn active" data-region="all">全部</button>
+      <button class="btn" data-region="us">美国</button>
+      <button class="btn" data-region="cn">中国</button>
+    </div>
+
+    <section class="grid" id="grid"></section>
+
+    <footer>
+      提示：产品信息会持续更新，实际可用性与定价以各平台官网为准。
+    </footer>
+  </main>
+
+  <script>
+    const tools = [
+      { name: 'ChatGPT (OpenAI)', region: 'us', type: '通用助手', desc: '多模态通用 AI 助手，支持写作、编程、分析与文档处理。', url: 'https://chatgpt.com/' },
+      { name: 'Claude (Anthropic)', region: 'us', type: '对话与文档', desc: '擅长长文本理解与总结，适合知识工作与文档协作。', url: 'https://claude.ai/' },
+      { name: 'Gemini (Google)', region: 'us', type: '多模态', desc: 'Google 的 AI 助手与模型生态，支持文本、图像等能力。', url: 'https://gemini.google.com/' },
+      { name: 'Microsoft Copilot', region: 'us', type: '办公效率', desc: '整合在 Microsoft 生态中的 AI 助手，提升办公与生产力。', url: 'https://copilot.microsoft.com/' },
+      { name: 'Perplexity', region: 'us', type: 'AI 搜索', desc: '基于大模型的答案引擎，注重检索与引用来源。', url: 'https://www.perplexity.ai/' },
+      { name: 'Midjourney', region: 'us', type: 'AI 绘图', desc: '高质量文生图工具，常用于创意设计与视觉概念生成。', url: 'https://www.midjourney.com/' },
+      { name: 'Cursor', region: 'us', type: '代码助手', desc: '面向开发者的 AI 编程工具，支持代码生成和重构。', url: 'https://www.cursor.com/' },
+
+      { name: '通义千问 (阿里云)', region: 'cn', type: '通用大模型', desc: '阿里推出的大模型与应用平台，覆盖对话、创作与开发。', url: 'https://tongyi.aliyun.com/' },
+      { name: '文心一言 (百度)', region: 'cn', type: '通用助手', desc: '百度文心系列 AI 产品入口，支持问答、创作与智能体。', url: 'https://yiyan.baidu.com/' },
+      { name: '豆包 (字节跳动)', region: 'cn', type: '对话助手', desc: '面向个人与办公场景的 AI 助手，覆盖问答和创作。', url: 'https://www.doubao.com/' },
+      { name: 'Kimi (月之暗面)', region: 'cn', type: '长文档处理', desc: '以长上下文和资料阅读能力见长的 AI 助手。', url: 'https://kimi.moonshot.cn/' },
+      { name: '讯飞星火', region: 'cn', type: '通用大模型', desc: '科大讯飞推出的大模型，聚焦教育、办公与行业场景。', url: 'https://xinghuo.xfyun.cn/' },
+      { name: '智谱清言 (智谱 AI)', region: 'cn', type: '对话助手', desc: 'GLM 系列模型应用入口，支持问答、代码和创作。', url: 'https://chatglm.cn/' },
+      { name: '海螺 AI', region: 'cn', type: 'AI 视频', desc: 'MiniMax 提供的内容生成工具，支持图像与视频创作。', url: 'https://hailuoai.com/' }
+    ];
+
+    const grid = document.getElementById('grid');
+    const toolbar = document.getElementById('toolbar');
+
+    function label(region) {
+      return region === 'us' ? '美国' : '中国';
+    }
+
+    function render(region = 'all') {
+      const list = region === 'all' ? tools : tools.filter(t => t.region === region);
+      grid.innerHTML = list.map(item => `
+        <article class="card">
+          <span class="tag">${label(item.region)} · ${item.type}</span>
+          <h3>${item.name}</h3>
+          <p class="desc">${item.desc}</p>
+          <a class="go" href="${item.url}" target="_blank" rel="noopener noreferrer">访问官网 ↗</a>
+        </article>
+      `).join('');
+    }
+
+    toolbar.addEventListener('click', (e) => {
+      const button = e.target.closest('button[data-region]');
+      if (!button) return;
+      [...toolbar.querySelectorAll('.btn')].forEach(btn => btn.classList.remove('active'));
+      button.classList.add('active');
+      render(button.dataset.region);
+    });
+
+    render();
+  </script>
+</body>
+</html>
